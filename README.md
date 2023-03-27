@@ -1,16 +1,16 @@
-# enable-loudness-equalisation
-automatically adds and enables loudness equalisation to any playback device
+# Enable Loudness Equalisation
+Automatically adds and enables loudness equalisation to any playback device
 
-| before exection | after exection |
+| before execution | after execution |
 | --------------- | -------------- |
 | ![Enhancements Missing](EnhancementsMissing.png)  | ![Enhancements Added](EnhancementsAdded.png)  |
 
-# how to run
+# How to Run
 one time run as admin in powershell
 ```
 EnableLoudness.ps1 -playbackDeviceName <name of your playback device>
 ```
-reusable shortcut
+Reusable shortcut
 1. target: `powershell.exe -f EnableLoudness.ps1 -playbackDeviceName <name of your playback device>`
 2. advanced: run as admin
 
@@ -20,9 +20,9 @@ reusable shortcut
 - you can't enable it globally in your driver
 
 # Why does it need to be scripted?
-- if you want to toogle it via hotkey
+- if you want to toggle it via hotkey
 - updates are messing with your audio drivers
-- some usecases lead into reregistration of your HDMI or Displayport playback devices which will purge your settings every time
+- some use cases lead into re-registration of your HDMI or DisplayPort playback devices, which will purge your settings every time
 
 # What does it do?
 1. search for all playback devices by name in registry
@@ -30,5 +30,5 @@ reusable shortcut
 1. restarts audio service to apply changed registry values
 
 # Known Issues
-- all settings flags stored in `fc52a749-4be9-4510-896e-966ba6525980` get overwritten with instead of just enabling loudness equalisation
-- flags key is different accros windows version `fc52a749-4be9-4510-896e-966ba6525980` used in this script works for windows 11, maybe 10 as well.
+- all settings flags stored in `fc52a749-4be9-4510-896e-966ba6525980` get overwritten with, instead of just enabling loudness equalisation
+- flags key is different across Windows version `fc52a749-4be9-4510-896e-966ba6525980` used in this script works for Windows 11, maybe 10 as well.
