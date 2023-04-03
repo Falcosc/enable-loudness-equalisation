@@ -23,14 +23,15 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 - some use cases lead into re-registration of your HDMI or DisplayPort playback devices, which will purge your settings every time
 
 # What does it do?
-1. search for all playback devices by name in registry
+1. search for all active playback devices by name in registry
 1. imports audio enhancement settings and sets loudness equalisation flag
 1. restarts audio service to apply changed registry values
 
 # Known Issues
-- all settings flags stored in `fc52a749-4be9-4510-896e-966ba6525980` get overwritten with, instead of just enabling loudness equalisation
-- flags key is different across Windows version `fc52a749-4be9-4510-896e-966ba6525980` used in this script works for Windows 11, maybe 10 as well.
+- all setting flags stored in `fc52a749-4be9-4510-896e-966ba6525980` get overwritten, instead of just enabling loudness equalisation
+- flags key are different across Windows versions `fc52a749-4be9-4510-896e-966ba6525980` used in this script works for Windows 11, maybe 10 as well.
 - If the playback device gets re-detected the audio service reboot maybe sets volume to default 100%
+- Sound Settings UI shows 0% volume if it was open during restart (reopening fixes it)
 
 # Install as Task
 1. Open Task Scheduler
