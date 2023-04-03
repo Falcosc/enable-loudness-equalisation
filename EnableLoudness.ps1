@@ -51,7 +51,7 @@ if($activeRenderer.length -gt $maxDeviceCount) {
     $devices
     exitWithErrorMsg "Execution aborted, because more then $maxDeviceCount Active Devices found by Name $playbackDeviceName"
 }
-$renderer | ForEach-Object{
+$activeRenderer | ForEach-Object{
     $fxKeyPath = $_ -replace 'Properties','FxProperties'
     $fxProperties = Get-ItemProperty -Path Registry::$fxKeyPath
     If (($fxProperties -eq $null) -or ($fxProperties.$enhancementFlagKey -eq $null) -or 
