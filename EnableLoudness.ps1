@@ -43,9 +43,13 @@ if(!$?) {
 }
 
 $renderer = $devices | Select-String "Render"
-if($renderer.length -gt $maxDeviceCount){
+$activeRenderer = $renderer | ? { (Get-ItemPropertyValue -Path Registry::$($_ -replace '\\Properties','') -Name DeviceState) -eq 1}
+if($activeRenderer.length -lt 1) {
+    exitWithErrorMsg "There are $($renderer.length) devices with Name $playbackDeviceName, but non of them is active"
+}
+if($activeRenderer.length -gt $maxDeviceCount) {
     $devices
-    exitWithErrorMsg "Execution aborted, because more then $maxDeviceCount Devices found by Name $playbackDeviceName"
+    exitWithErrorMsg "Execution aborted, because more then $maxDeviceCount Active Devices found by Name $playbackDeviceName"
 }
 $renderer | ForEach-Object{
     $fxKeyPath = $_ -replace 'Properties','FxProperties'
