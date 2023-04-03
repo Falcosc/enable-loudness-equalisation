@@ -43,5 +43,5 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 1. Actions -> New...
     - Action: Start a program
     - Program: powershell
-    - Add arguments: `-WindowStyle hidden -f %HOMEPATH%\EnableBassBoost.ps1 -playbackDeviceName BE279 -enableLoudness`
+    - Add arguments: `-WindowStyle hidden -f %HOMEPATH%\EnableLoudness.ps1 -playbackDeviceName BE279 -enableLoudness`
 1. To test it you could use an invalid DeviceName like "-playbackDeviceName XXX" then you will see an error message popup after login
