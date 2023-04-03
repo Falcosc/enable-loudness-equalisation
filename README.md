@@ -30,6 +30,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 # Known Issues
 - all settings flags stored in `fc52a749-4be9-4510-896e-966ba6525980` get overwritten with, instead of just enabling loudness equalisation
 - flags key is different across Windows version `fc52a749-4be9-4510-896e-966ba6525980` used in this script works for Windows 11, maybe 10 as well.
+- If the playback device gets redetected the audio service reboot maybe sets volume to default 100%
 
 # Install as Task
 1. Open Task Scheduler
