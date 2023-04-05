@@ -13,14 +13,14 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 . $env:HOMEPATH\EnableLoudness.ps1
 ```
 # When is it needed?
-- HDMI or Display Port Playback devices usually doesn't have it
-- if you can not find audio driver version which adds loudness equalisation to any of your playback devices
+- HDMI, Display Port, Digital Optical Output playback devices usually doesn't have it
+- if you can not find an audio driver version which adds loudness equalisation to any of your playback devices
 - you can't enable it globally in your driver
 
 # Why does it need to be scripted?
 - if you want to toggle it via hotkey
 - updates are messing with your audio drivers
-- some use cases lead into re-registration of your HDMI or DisplayPort playback devices, which will purge your settings every time
+- some use cases lead into re-registration of HDMI or DisplayPort playback devices, which will purge your settings every time
 
 # What does it do?
 1. search for all active playback devices by name in registry
@@ -32,6 +32,9 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 - flags key are different across Windows versions `fc52a749-4be9-4510-896e-966ba6525980` used in this script works for Windows 11, maybe 10 as well.
 - If the playback device gets re-detected the audio service reboot maybe sets volume to default 100%
 - Sound Settings UI shows 0% volume if it was open during restart (reopening fixes it)
+- Restarting audio service after sleep does break the taskbar tray icon volume slider in some situations
+    - mediakeys and sound settings UI volume controll still works fine
+    - tray icon slider gets fixed with full reboot
 
 # Install as Task
 1. Open Task Scheduler
