@@ -45,16 +45,14 @@ function importReg ([String] $file){
 }
 
 $ErrorActionPreference = "Stop"
+$PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 $regFile = "$env:temp\SoundEnhancementsTMP.reg"
 $enhancementFlagKey = "{fc52a749-4be9-4510-896e-966ba6525980},3"
 $fxPropertiesImport = @"
-{
 "{d04e05a6-594b-4fb6-a80d-01af5eed7d1d},1"="{62dc1a93-ae24-464c-a43e-452f824c4250}" ;PreMixEffectClsid activates effects
 "{d04e05a6-594b-4fb6-a80d-01af5eed7d1d},2"="{637c490d-eee3-4c0a-973f-371958802da2}" ;PostMixEffectClsid activates effects
 "{d04e05a6-594b-4fb6-a80d-01af5eed7d1d},3"="{5860E1C5-F95C-4a7a-8EC8-8AEF24F379A1}" ;UserInterfaceClsid shows it in ui
 "{fc52a749-4be9-4510-896e-966ba6525980},3"=hex:0b,00,00,00,01,00,00,00,ff,ff,00,00 ;enables loudness equalisation
-
-}
 "@
 $devices = reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\MMDevices\Audio\Render /s /f $playbackDeviceName /d
 if(!$?) {
