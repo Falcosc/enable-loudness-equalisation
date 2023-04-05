@@ -5,6 +5,8 @@ Automatically adds and enables loudness equalisation to any playback device
 | --------------- | -------------- |
 | ![Enhancements Missing](EnhancementsMissing.png)  | ![Enhancements Added](EnhancementsAdded.png)  |
 
+If you are looking for bass boost, you can use the more complex version of this script https://github.com/Falcosc/enable-bass-boost
+
 # How to Download and Run
 run in powershell
 ```
