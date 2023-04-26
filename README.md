@@ -1,5 +1,7 @@
 # Enable Loudness Equalisation
-Automatically adds and enables loudness equalisation to any playback device
+Automatically adds and enables loudness equalisation to any playback device.
+
+Only works if your selected driver supports enhancements for speakers, but didn't expose this support for any other output devices. This script will  expose any existing support, but can not work if the driver doesn't ship any.
 
 | before execution | after execution |
 | --------------- | -------------- |
@@ -37,6 +39,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 - Restarting audio service after sleep does break the taskbar tray icon volume slider in some situations
     - mediakeys and sound settings UI volume controll still works fine
     - tray icon slider gets fixed with full reboot
+- does not work if your driver doesn't have any enhancements, try a different one
 
 # Install as Task
 1. Open Task Scheduler
