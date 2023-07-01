@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     automatically add and enables loudness equalisation to any playback device
 .DESCRIPTION
@@ -48,6 +48,8 @@ $ErrorActionPreference = "Stop"
 $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 $regFile = "$env:temp\SoundEnhancementsTMP.reg"
 $enhancementFlagKey = "{fc52a749-4be9-4510-896e-966ba6525980},3"
+$enhancementTabKey = "{d04e05a6-594b-4fb6-a80d-01af5eed7d1d},3"
+$enhancementTabValue = "{5860E1C5-F95C-4a7a-8EC8-8AEF24F379A1}"
 $fxPropertiesImport = @"
 "{d04e05a6-594b-4fb6-a80d-01af5eed7d1d},1"="{62dc1a93-ae24-464c-a43e-452f824c4250}" ;PreMixEffectClsid activates effects
 "{d04e05a6-594b-4fb6-a80d-01af5eed7d1d},2"="{637c490d-eee3-4c0a-973f-371958802da2}" ;PostMixEffectClsid activates effects
@@ -73,12 +75,18 @@ $missingLoudness = $false
 "Windows Registry Editor Version 5.00" > $regFile
 $activeRenderer | ForEach-Object{
     $fxKeyPath = $_ -replace 'Properties','FxProperties'
-    $fxProperties = Get-ItemProperty -Path Registry::$fxKeyPath
-    if (($fxProperties -eq $null) -or ($fxProperties.$enhancementFlagKey -eq $null) -or 
-        ($fxProperties.$enhancementFlagKey[8] -ne 255) -or ($fxProperties.$enhancementFlagKey[9] -ne 255)) { 
+    $fxProperties = Get-ItemProperty -Path Registry::$fxKeyPath -ErrorAction Ignore
+    if (($fxProperties -eq $null) -or ($fxProperties.$enhancementFlagKey -eq $null) -or ($fxProperties.$enhancementTabKey -eq $null) -or
+        ($fxProperties.$enhancementFlagKey[8] -ne 255) -or ($fxProperties.$enhancementFlagKey[9] -ne 255) -or
+        ($fxProperties.$enhancementTabKey -ne $enhancementTabValue)) {
         "[" + $fxKeyPath + "]" >> $regFile
         $fxPropertiesImport >> $regFile
         $missingLoudness = $true
+    }
+    if ($fxProperties -eq $null) {
+        Write-Host -NoNewline "FxProperties is missing" -ForegroundColor Red
+        ", it is very likely that import of $regFile does not work."
+        "Please check if following path got created or create it manually: $fxKeyPath"
     }
 }
 
@@ -100,4 +108,3 @@ importReg $regFile
 
 "Restart Audio to apply registry settings"
 Restart-Service audiosrv -Force
-
