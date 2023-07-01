@@ -84,8 +84,9 @@ $activeRenderer | ForEach-Object{
         $missingLoudness = $true
     }
     if ($fxProperties -eq $null) {
-        "FxProperties is missing, it is very likely that import of $regFile does not work, " +
-        "please check if following path got created or create it manually: $fxKeyPath"
+        Write-Host -NoNewline "FxProperties is missing" -ForegroundColor Red
+        ", it is very likely that import of $regFile does not work."
+        "Please check if following path got created or create it manually: $fxKeyPath"
     }
 }
 
