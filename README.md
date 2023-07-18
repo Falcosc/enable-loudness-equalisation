@@ -16,6 +16,11 @@ Invoke-WebRequest https://raw.githubusercontent.com/Falcosc/enable-loudness-equa
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 . $env:HOMEPATH\EnableLoudness.ps1
 ```
+Or if you want to set the fastest possible time until sound level gets adjusted (unpleasend to daily usage but gives a competitive edge on video games where dynamic audiolevel adjustments are not banned)
+```
+. $env:HOMEPATH\EnableLoudness.ps1 -releaseTime 2
+```
+
 # When is it needed?
 - HDMI, Display Port, Digital Optical Output playback devices usually doesn't have it
 - if you can not find an audio driver version which adds loudness equalisation to any of your playback devices
@@ -28,7 +33,11 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 # What does it do?
 1. search for all active playback devices by name in registry
-1. imports audio enhancement settings and sets loudness equalisation flag
+1. imports audio enhancement settings
+    - PreMixEffectClsid and PostMixEffectClsid
+    - Enhancement Tab UI defnition
+    - loudness equalisation flag
+    - release time value
 1. restarts audio service to apply changed registry values
 
 # Known Issues
