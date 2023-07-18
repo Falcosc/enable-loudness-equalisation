@@ -11,6 +11,14 @@
     Searches for Audio Device Names starting with this String
 .PARAMETER maxDeviceCount
     Limits the amount of devices to be configured
+.PARAMETER releaseTime
+    time until audio level is adjusted: from "2" (fast adjustment) up to "7" (slow adjustment)
+.EXAMPLE
+    PS> .\EnableLoudness.ps1 -playbackDeviceName BE279
+    enable loudness equalisation for Audio Devie BE279
+.EXAMPLE
+    PS> .\EnableLoudness.ps1 -releaseTime 2
+    set shortest possible time until audio level is adjusted
 #>
 
 Param(
@@ -19,7 +27,10 @@ Param(
    [string]$playbackDeviceName,
    
    [ValidateRange(1, 10)]
-   [int]$maxDeviceCount=2
+   [int]$maxDeviceCount=2,
+
+   [ValidateRange(2, 7)]
+   [int]$releaseTime=4
 )
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -48,13 +59,16 @@ $ErrorActionPreference = "Stop"
 $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 $regFile = "$env:temp\SoundEnhancementsTMP.reg"
 $enhancementFlagKey = "{fc52a749-4be9-4510-896e-966ba6525980},3"
+$releaseTimeKey = "{9c00eeed-edce-4cd8-ae08-cb05e8ef57a0},3"
 $enhancementTabKey = "{d04e05a6-594b-4fb6-a80d-01af5eed7d1d},3"
 $enhancementTabValue = "{5860E1C5-F95C-4a7a-8EC8-8AEF24F379A1}"
+$releaseTimeStr = $releaseTime.ToString().PadLeft(2,'0')
 $fxPropertiesImport = @"
 "{d04e05a6-594b-4fb6-a80d-01af5eed7d1d},1"="{62dc1a93-ae24-464c-a43e-452f824c4250}" ;PreMixEffectClsid activates effects
 "{d04e05a6-594b-4fb6-a80d-01af5eed7d1d},2"="{637c490d-eee3-4c0a-973f-371958802da2}" ;PostMixEffectClsid activates effects
 "{d04e05a6-594b-4fb6-a80d-01af5eed7d1d},3"="{5860E1C5-F95C-4a7a-8EC8-8AEF24F379A1}" ;UserInterfaceClsid shows it in ui
 "{fc52a749-4be9-4510-896e-966ba6525980},3"=hex:0b,00,00,00,01,00,00,00,ff,ff,00,00 ;enables loudness equalisation
+"{9c00eeed-edce-4cd8-ae08-cb05e8ef57a0},3"=hex:03,00,00,00,01,00,00,00,$releaseTimeStr,00,00,00 ;equalisation release time 2 to 7
 "@
 $devices = reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\MMDevices\Audio\Render /s /f $playbackDeviceName /d
 if(!$?) {
@@ -76,9 +90,10 @@ $missingLoudness = $false
 $activeRenderer | ForEach-Object{
     $fxKeyPath = $_ -replace 'Properties','FxProperties'
     $fxProperties = Get-ItemProperty -Path Registry::$fxKeyPath -ErrorAction Ignore
-    if (($fxProperties -eq $null) -or ($fxProperties.$enhancementFlagKey -eq $null) -or ($fxProperties.$enhancementTabKey -eq $null) -or
+    if (($fxProperties -eq $null) -or ($fxProperties.$enhancementFlagKey -eq $null) -or 
         ($fxProperties.$enhancementFlagKey[8] -ne 255) -or ($fxProperties.$enhancementFlagKey[9] -ne 255) -or
-        ($fxProperties.$enhancementTabKey -ne $enhancementTabValue)) {
+        ($fxProperties.$releaseTimeKey -eq $null) -or ($fxProperties.$releaseTimeKey[8] -ne $releaseTime) -or
+        ($fxProperties.$enhancementTabKey -eq $null) -or ($fxProperties.$enhancementTabKey -ne $enhancementTabValue)) {
         "[" + $fxKeyPath + "]" >> $regFile
         $fxPropertiesImport >> $regFile
         $missingLoudness = $true
