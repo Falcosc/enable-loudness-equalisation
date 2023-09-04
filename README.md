@@ -35,6 +35,7 @@ Or if you want to set the fastest possible time until sound level gets adjusted 
 1. search for all active playback devices by name in registry
 1. imports audio enhancement settings
     - PreMixEffectClsid and PostMixEffectClsid
+    - StreamEffectClsid and ModeEffectClsid
     - Enhancement Tab UI defnition
     - loudness equalisation flag
     - release time value
