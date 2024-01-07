@@ -111,9 +111,9 @@ $activeRenderer | ForEach-Object{
         $missingLoudness = $true
     }
     if ($fxProperties -eq $null) {
-        Write-Host -NoNewline "FxProperties is missing" -ForegroundColor Red
-        ", it is very likely that import of $regFile does not work."
-        "Please check if following path got created or create it manually: $fxKeyPath"
+        Write-Host -NoNewline "FxProperties is missing '$fxKeyPath'" -ForegroundColor Red
+        ", it is very likely that import of $regFile will not work since your driver package did not include effects"
+        "Try to install a different driver package version or switch to third party sound processing software."
     }
 }
 
