@@ -72,13 +72,24 @@ $fxPropertiesImport = @"
 "{fc52a749-4be9-4510-896e-966ba6525980},3"=hex:0b,00,00,00,01,00,00,00,ff,ff,00,00 ;enables loudness equalisation
 "{9c00eeed-edce-4cd8-ae08-cb05e8ef57a0},3"=hex:03,00,00,00,01,00,00,00,$releaseTimeStr,00,00,00 ;equalisation release time 2 to 7
 "@
-$devices = reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\MMDevices\Audio\Render /s /f $playbackDeviceName /d
-if(!$?) {
+
+$devices = Get-ChildItem "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\MMDevices\Audio\Render\*\Properties"
+if($devices.length -eq 0) {
+    exitWithErrorMsg "Script does not have access to your Audiodevices, try to run it as Admin."
+}
+
+$renderer = @()
+foreach($device in $devices) {
+    if (($device.GetValueNames() | %{$device.GetValue($_)}) -match $playbackDeviceName) {
+        $renderer += Get-ItemProperty $device.PSParentPath
+    }
+}
+
+if($renderer.length -lt 1) {
     exitWithErrorMsg "Could not find any device named $playbackDeviceName"
 }
 
-$renderer = $devices | Select-String "Render"
-$activeRenderer = $renderer | ? { (Get-ItemPropertyValue -Path Registry::$($_ -replace '\\Properties','') -Name DeviceState) -eq 1}
+$activeRenderer = @($renderer | Where-Object -Property DeviceState -eq 1)
 if($activeRenderer.length -lt 1) {
     exitWithErrorMsg "There are $($renderer.length) devices with Name $playbackDeviceName, but non of them is active"
 }
@@ -90,8 +101,7 @@ if($activeRenderer.length -gt $maxDeviceCount) {
 $missingLoudness = $false
 "Windows Registry Editor Version 5.00" > $regFile
 $activeRenderer | ForEach-Object{
-    $fxKeyPath = $_ -replace 'Properties','FxProperties'
-    $fxProperties = Get-ItemProperty -Path Registry::$fxKeyPath -ErrorAction Ignore
+    $fxProperties = Join-Path -Path $_.PSPath -ChildPath FxProperties | Get-ItemProperty -ErrorAction Ignore
     if (($fxProperties -eq $null) -or ($fxProperties.$enhancementFlagKey -eq $null) -or 
         ($fxProperties.$enhancementFlagKey[8] -ne 255) -or ($fxProperties.$enhancementFlagKey[9] -ne 255) -or
         ($fxProperties.$releaseTimeKey -eq $null) -or ($fxProperties.$releaseTimeKey[8] -ne $releaseTime) -or
