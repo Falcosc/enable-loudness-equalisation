@@ -101,7 +101,8 @@ if($activeRenderer.length -gt $maxDeviceCount) {
 $missingLoudness = $false
 "Windows Registry Editor Version 5.00" > $regFile
 $activeRenderer | ForEach-Object{
-    $fxProperties = Join-Path -Path $_.PSPath -ChildPath FxProperties | Get-ItemProperty -ErrorAction Ignore
+    $fxKeyPath = Join-Path -Path $_.PSPath.Replace("Microsoft.PowerShell.Core\Registry::", "") -ChildPath FxProperties
+    $fxProperties = Get-ItemProperty -Path Registry::$fxKeyPath -ErrorAction Ignore
     if (($fxProperties -eq $null) -or ($fxProperties.$enhancementFlagKey -eq $null) -or 
         ($fxProperties.$enhancementFlagKey[8] -ne 255) -or ($fxProperties.$enhancementFlagKey[9] -ne 255) -or
         ($fxProperties.$releaseTimeKey -eq $null) -or ($fxProperties.$releaseTimeKey[8] -ne $releaseTime) -or
