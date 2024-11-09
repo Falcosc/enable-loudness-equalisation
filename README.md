@@ -21,6 +21,36 @@ Or if you want to set the fastest possible time until sound level gets adjusted 
 . $env:HOMEPATH\EnableLoudness.ps1 -releaseTime 2
 ```
 
+## Using the Toggle Version with GUI
+This script includes a toggle version with an AutoHotkey (AHK) GUI script for easier use:
+1. **Install [AutoHotkey v2.0+](https://www.autohotkey.com/)** if you haven't already.
+2. Save the `ToggleGui.ahk` script in the same folder as `EnableLoudness.ps1`.
+3. Run `ToggleGui.ahk` to open a simple window with a button that toggles loudness equalisation when clicked.
+
+### Environment Variables for the Toggle Script
+For the toggle script to work correctly, the following environment variables must be set:
+- **`HeadphonesName`**: Specifies the playback device name. This should match the beginning of the device name as shown in your system.
+  - Example: 
+    ```cmd
+    setx HeadphonesName "YourDeviceName"
+    ```
+- **`ReleaseTime`**: Sets the release time for audio level adjustment, from 2 (fastest) to 7 (slowest).
+  - Example:
+    ```cmd
+    setx ReleaseTime "4"
+    ```
+
+> **Note**: Setting these variables ensures the toggle script works with the intended playback device and adjustment speed.
+
+### How to Set Environment Variables
+1. Open Command Prompt as an administrator.
+2. Use `setx` to set the environment variables:
+   ```cmd
+   setx HeadphonesName "YourDeviceName"
+   setx ReleaseTime "4"
+   ```
+3. Restart Command Prompt or PowerShell to apply the changes, or reboot your system for a global update.
+
 # When is it needed?
 - HDMI, Display Port, Digital Optical Output playback devices usually doesn't have it
 - if you can not find an audio driver version which adds loudness equalisation to any of your playback devices
