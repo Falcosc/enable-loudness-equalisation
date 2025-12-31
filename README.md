@@ -80,6 +80,16 @@ For the toggle script to work correctly, the following environment variables mus
     - mediakeys and sound settings UI volume controll still works fine
     - tray icon slider gets fixed with full reboot
 - does not work if your driver doesn't have any enhancements, try a different one
+- incompatible devices will be unable to output audio until settings are restored
+
+# Restore Settings
+Most drivers restore settings if the registry key get removed, that would be the manual way to restore.
+Over UI we found the following way to reset your settings [#156](https://github.com/Falcosc/enable-loudness-equalisation/issues/28)
+1. Device Manager
+1. Sound, video and game controllers
+1. Right-click on your Audio Device
+1. Uninstall device, DO NOT check “Delete driver software”
+1. Reboot
 
 # Install as Task
 1. Open Task Scheduler
